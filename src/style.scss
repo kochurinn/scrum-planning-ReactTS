@@ -11,6 +11,11 @@
     display: none !important;
 }
 
+.header {
+    display: flex;
+    padding: 20px 0 0 20px;
+}
+
 .add-player {
     width: 180px;
     text-align: center;
@@ -20,7 +25,6 @@
     font-size: 20x;
     font-weight: bold;
     color: #006aff;
-    margin: 20px 0 0 20px;
     cursor: pointer;
     transition: .2s all;
     &:hover {
@@ -28,6 +32,108 @@
         color: #fff;
     }
 }
+
+.players {
+    display: flex;
+    .players__elem {
+        width: 180px;
+        padding: 15px 0;
+        text-align: center;
+        border: 1px solid #8000ff;
+        border-radius: 10px;
+        font-size: 20x;
+        font-weight: bold;
+        color: #8000ff;
+        margin-left: 20px;
+        transition: .2s all;
+        cursor: pointer;
+        &--selected {
+            color: #fff;
+            background-color: #8000ff;
+        }
+    }
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    flex-flow: column;
+    .table__center {
+        width: 340px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #d7e9ff;
+        border-radius: 15px;
+        margin-bottom: 15px;
+    }
+    .table__cards {
+        display: flex;
+        .table__cards-elem {
+            min-width: 53px;
+            min-height: 87px;
+            padding: 30px 18px;
+            font-size: 20px;
+            border: 2px solid #006aff;
+            font-size: bold;
+            border-radius: 10px;
+            margin-left: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #006aff;
+            transition: 0.2s all;
+            background: linear-gradient(45deg, #3993ff 12%, transparent 0, transparent 88%, #3993ff 0), linear-gradient(135deg, transparent 37%, #1a7bf2 0, #1a7bf2 63%, transparent 0), linear-gradient(45deg, transparent 37%, #3993ff 0, #3993ff 63%, transparent 0), #74b3ff;
+            background-size: 17px 17px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+.cards {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    margin-bottom: 20px;
+    .cards__elem { 
+        min-width: 60px;
+        padding: 30px 20px;
+        font-size: 20px;
+        border: 2px solid #006aff;
+        font-size: bold;
+        border-radius: 10px;
+        margin-left: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: #006aff;
+        transition: .2s all;
+        cursor: pointer;
+        &:first-child {
+            margin: 0;
+        }
+        &:hover {
+            transform: translateY(-5px);
+            background: #006aff20;
+        }
+        &--selected {
+            transform: translateY(-10px);
+            background: #006aff;
+            color: #fff;
+            &:hover {
+                transform: translateY(-10px);
+                background: #006aff;
+            }
+        }
+    }
+}
+
 
 .overlap {
     position: fixed;
