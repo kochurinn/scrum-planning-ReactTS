@@ -73,11 +73,11 @@
     .table__cards {
         display: flex;
         .table__cards-elem {
-            min-width: 53px;
-            min-height: 87px;
-            padding: 30px 18px;
+            width: 53px;
+            height: 87px;
+            line-height: 84px;
             font-size: 20px;
-            border: 2px solid #006aff;
+            background-color: #00000015;
             font-size: bold;
             border-radius: 10px;
             margin-left: 10px;
@@ -85,11 +85,18 @@
             font-weight: bold;
             color: #006aff;
             transition: 0.2s all;
-            background: linear-gradient(45deg, #3993ff 12%, transparent 0, transparent 88%, #3993ff 0), linear-gradient(135deg, transparent 37%, #1a7bf2 0, #1a7bf2 63%, transparent 0), linear-gradient(45deg, transparent 37%, #3993ff 0, #3993ff 63%, transparent 0), #74b3ff;
-            background-size: 17px 17px;
             &:first-child {
                 margin-left: 0;
             }
+        }
+        .table__cards-elem--closed {
+            border: 2px solid #006aff;
+            background: linear-gradient(45deg, #3993ff 12%, transparent 0, transparent 88%, #3993ff 0), linear-gradient(135deg, transparent 37%, #1a7bf2 0, #1a7bf2 63%, transparent 0), linear-gradient(45deg, transparent 37%, #3993ff 0, #3993ff 63%, transparent 0), #74b3ff;
+            background-size: 17px 17px;
+        }
+        .table__cards-elem--opened {
+            border: 2px solid #006aff;
+            background: #fff;
         }
     }
 }
@@ -103,8 +110,9 @@
     justify-content: center;
     margin-bottom: 20px;
     .cards__elem { 
-        min-width: 60px;
-        padding: 30px 20px;
+        width: 60px;
+        height: 90px;
+        line-height: 87px;
         font-size: 20px;
         border: 2px solid #006aff;
         font-size: bold;

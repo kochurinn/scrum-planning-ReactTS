@@ -12,7 +12,8 @@ function App() {
   const [players, setPlayers] = useState<Player[]>([])
   const [activeCard, setActiveCard] = useState(-1)
   const [activePlayer, setActivePlayer] = useState('')
-
+  const [tableCards, setTableCards] = useState<Array<number>>([])
+  const [revealCard, setRevealCard] = useState(false)
 
   const cardsModul = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -34,6 +35,7 @@ function App() {
       chooseCard: -1
     }
     setPlayers([...players, player])
+    setTableCards([...tableCards, 0])
     setName('')
     onClickCloseModal()
   }
@@ -51,15 +53,21 @@ function App() {
     setPlayers(modifiedPlayers)
   }
 
-  const setChooseCard = (cardNumber: number) => {
+  const setChooseCard = (cardNumber: number, index: number) => {
     const modifiedPlayers = players
     modifiedPlayers.forEach(player => {
       if (player.active === true) {
         player.chooseCard = cardNumber
+        changeStateCardTable(index, cardNumber)
       }
     })
     setActiveCard(cardNumber)
     setPlayers(modifiedPlayers)
+  }
+
+  const changeStateCardTable = (index: number, cardNumber: number) => {
+    const modifiedTableCards = tableCards
+    modifiedTableCards[index] = cardNumber
   }
 
   return (
@@ -83,16 +91,15 @@ function App() {
         <div className="table">
           <div className="table__center">Pick your cards!</div>
           <div className="table__cards">
-            <div className="table__cards-elem"></div>
-            <div className="table__cards-elem"></div>
-            <div className="table__cards-elem"></div>
-            <div className="table__cards-elem"></div>
+            { tableCards.map((card, index) => (
+              <div key={index} className={`table__cards-elem ${card ? 'table__cards-elem--closed' : ''}`}>{card}</div>
+            )) }
           </div>
         </div>
 
         <div className="cards">
           { cardsModul[0].map((card, index) => (
-            <div key={index} className={`cards__elem ${card === activeCard ? 'cards__elem--selected' : ''}`} onClick={() => setChooseCard(card)}>{card}</div>
+            <div key={index} className={`cards__elem ${card === activeCard ? 'cards__elem--selected' : ''}`} onClick={() => setChooseCard(card, index)}>{card}</div>
           )) }
         </div>
 
