@@ -3,17 +3,18 @@ import { useState } from 'react'
 type Player = {
   name: string
   active: boolean
-  chooseCard: number
+  chooseCard: number | null
 }
 
 function App() {
   const [modalStatus, setModalStatus] = useState(false)
   const [name, setName] = useState('')
   const [players, setPlayers] = useState<Player[]>([])
-  const [activeCard, setActiveCard] = useState(-1)
+  const [activeCard, setActiveCard] = useState<number | null>(null)
   const [activePlayer, setActivePlayer] = useState('')
   const [tableCards, setTableCards] = useState<Array<number>>([])
   const [revealCard, setRevealCard] = useState(false)
+  const [result, setResult] = useState<number | null>(null)
 
   const cardsModul = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -32,7 +33,7 @@ function App() {
     const player: Player = {
       name: name,
       active: false,
-      chooseCard: -1
+      chooseCard: null
     }
     setPlayers([...players, player])
     setTableCards([...tableCards, 0])
@@ -58,17 +59,29 @@ function App() {
     modifiedPlayers.forEach(player => {
       if (player.active === true) {
         player.chooseCard = cardNumber
-        changeStateCardTable(index, cardNumber)
       }
     })
     setActiveCard(cardNumber)
+    setRevealCard(true)
     setPlayers(modifiedPlayers)
   }
 
-  const changeStateCardTable = (index: number, cardNumber: number) => {
-    const modifiedTableCards = tableCards
-    modifiedTableCards[index] = cardNumber
+  const changeStateCardTable = (player: Player) => {
+    if (player.chooseCard === null) {
+      return ''
+    }
+    if (result !== null) {
+      return 'table__cards-elem--opened'
+    }
+    return 'table__cards-elem--closed'
   }
+
+  const calcResult = () => {
+    const result = players.reduce((acc, player) => player.chooseCard + acc, 0)
+    setResult(result / players.length)
+    setActivePlayer('')
+  }
+
 
   return (
     <>
@@ -83,25 +96,50 @@ function App() {
 
           <div className="players">
             { players.map((player, index) => (
-              <div key={index} className={`players__elem ${player.name === activePlayer ? 'players__elem--selected' : ''}`} onClick={() => setActiveWorkspace(player.name)}>{player.name}</div>
+              <div 
+                key={index} 
+                className={`players__elem ${player.name === activePlayer ? 'players__elem--selected' : ''}`} 
+                onClick={() => setActiveWorkspace(player.name)}
+                >
+                  {player.name}
+              </div>
             ))}
           </div>
         </div>
         
         <div className="table">
-          <div className="table__center">Pick your cards!</div>
+          <div className="table__center">
+            <div className={`${revealCard ? 'd-none' : ''}`}>Pick your cards!</div>
+            <div 
+              className={`revealBtn ${!revealCard ? 'd-none' : ''}`} 
+              onClick={() => calcResult()}
+              >
+                Reveal cards
+            </div>
+          </div>
           <div className="table__cards">
-            { tableCards.map((card, index) => (
-              <div key={index} className={`table__cards-elem ${card ? 'table__cards-elem--closed' : ''}`}>{card}</div>
+            { players.map((player, index) => (
+              <div>
+                <div key={index} className={`table__cards-elem ${changeStateCardTable(player)}`}>{player.chooseCard}</div>
+                <div>{player.name}</div>
+              </div>
             )) }
           </div>
         </div>
 
-        <div className="cards">
+        <div className={`cards ${activePlayer !== '' ? '' : 'd-none'}`}>
           { cardsModul[0].map((card, index) => (
-            <div key={index} className={`cards__elem ${card === activeCard ? 'cards__elem--selected' : ''}`} onClick={() => setChooseCard(card, index)}>{card}</div>
+            <div 
+              key={index} 
+              className={`cards__elem ${card === activeCard ? 'cards__elem--selected' : ''}`} 
+              onClick={() => setChooseCard(card, index)}
+              >
+                {card}
+            </div>
           )) }
         </div>
+        
+        <div className={`result ${result ? '' : 'd-none'}`}>Average: {result ? result : 0}</div>
 
 
         <div className={`overlap ${modalStatus ? '' : 'd-none'}`}>
