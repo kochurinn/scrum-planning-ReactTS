@@ -18,7 +18,7 @@ function App() {
 
   const cardsModul = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89] //пока что не используется
   ]
 
   const onClickAddPlayer = () => {
@@ -54,7 +54,7 @@ function App() {
     setPlayers(modifiedPlayers)
   }
 
-  const setChooseCard = (cardNumber: number, index: number) => {
+  const setChooseCard = (cardNumber: number) => {
     const modifiedPlayers = players
     modifiedPlayers.forEach(player => {
       if (player.active === true) {
@@ -78,8 +78,19 @@ function App() {
 
   const calcResult = () => {
     const result = players.reduce((acc, player) => player.chooseCard + acc, 0)
-    setResult(result / players.length)
+    setResult((result / players.length).toFixed(1))
     setActivePlayer('')
+  }
+
+  const onClickNewGame = () => {
+    setModalStatus(false)
+    setName('')
+    setPlayers([])
+    setActiveCard(null)
+    setActivePlayer('')
+    setTableCards([])
+    setRevealCard(false)
+    setResult(null)
   }
 
 
@@ -88,22 +99,30 @@ function App() {
       <div>
         <div className="header">
           <div 
-            className="add-player"
-            onClick={onClickAddPlayer}
+            className={`new-game ${result !== null ? '' : 'd-none'}`}
+            onClick={onClickNewGame}
             >
-              Add player
+              New game
           </div>
+          <div className={`d-flex ${result === null ? '' : 'd-none'}`}>
+            <div 
+              className="add-player"
+              onClick={onClickAddPlayer}
+              >
+                Add player
+            </div>
 
-          <div className="players">
-            { players.map((player, index) => (
-              <div 
-                key={index} 
-                className={`players__elem ${player.name === activePlayer ? 'players__elem--selected' : ''}`} 
-                onClick={() => setActiveWorkspace(player.name)}
-                >
-                  {player.name}
-              </div>
-            ))}
+            <div className="players">
+              { players.map((player, index) => (
+                <div 
+                  key={index} 
+                  className={`players__elem ${player.name === activePlayer ? 'players__elem--selected' : ''}`} 
+                  onClick={() => setActiveWorkspace(player.name)}
+                  >
+                    {player.name}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         
@@ -132,7 +151,7 @@ function App() {
             <div 
               key={index} 
               className={`cards__elem ${card === activeCard ? 'cards__elem--selected' : ''}`} 
-              onClick={() => setChooseCard(card, index)}
+              onClick={() => setChooseCard(card)}
               >
                 {card}
             </div>
