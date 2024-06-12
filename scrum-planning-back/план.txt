@@ -1,0 +1,56 @@
+1. кто-то создаёт комнату. он подключается к серваку и просит id комнаты
+вход: {
+  type: 'create-room',
+  name: string
+}
+выход: {
+  room: string,
+  id: number
+}
+
+2. подключение другого участника:
+type Member {
+  id: number,
+  name: string,
+  cardReady: boolean
+}
+
+вход: {
+  type: 'join',
+  room: string,
+  name: string
+}
+выход: {
+  id: number,
+  members: Member[]
+}
+
+3. Кто-то выбрал карту
+вход: {
+  type: 'chooseCard',
+  card: number
+}
+выход отправителю: {
+  status: 'ok'
+}
+выход остальным участникам: {
+  type: 'cardChosen',
+  member: number,
+}
+
+4. Открыть карты
+вход: {
+  type: 'revealCards'
+}
+выход всем участникам: {
+  type: 'revealCards',
+  members: Record<id, number>
+}
+
+5. Сброс
+вход: {
+  type: 'reset'
+},
+выход: {
+  type: 'reset'
+}
