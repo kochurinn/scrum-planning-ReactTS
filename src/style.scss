@@ -19,6 +19,52 @@
     text-align: center;
 }
 
+.form--wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .form {
+        width: 400px;
+        .form__title {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .input {
+            all: unset;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+            padding: 15px 15px;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 5px;
+            border: 2px solid #0000003b;
+            transition: .2s all;
+            &--empty {
+                border: 2px solid #d03535;
+            }
+            &:focus {
+                border: 2px solid #3993ff;
+            }
+        }
+        .form__btn {
+            width: 100%;
+            padding: 15px 15px;
+            background-color: #3993ff;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+            transition: .2s all;
+            &:hover {
+                background-color: #1864c2;
+            }
+        }
+    }
+}
+
 .header {
     display: flex;
     padding: 20px 0 0 20px;
