@@ -5,7 +5,7 @@
 }
 выход: {
   room: string,
-  id: number
+  id: string
 }
 
 2. подключение другого участника:

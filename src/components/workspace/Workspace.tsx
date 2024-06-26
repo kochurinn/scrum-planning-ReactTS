@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { useEffect } from 'react'
-import { useSocketContext } from '../../contexts/socketContext'
 
 type Player = {
   id: symbol
@@ -8,21 +6,7 @@ type Player = {
   chosenCard: number | null
 }
 
-type UserData = {
-  id: string
-  name: string
-}
-
 const Workspace = () => {
-  const socket = useSocketContext();
-
-  const [usersData, setUsersData] = useState<UserData[]>([])
-
-  useEffect(() => {
-    socket.on('response', (data) => setUsersData([...usersData, data]))
-  }, [socket, usersData])
-
-
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [name, setName] = useState('')
   const [players, setPlayers] = useState<Player[]>([])

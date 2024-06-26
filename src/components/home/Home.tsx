@@ -1,20 +1,13 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useSocketContext } from "../../contexts/socketContext"
 
 const Home = () => {
-  const socket = useSocketContext();
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [classInput, setClassInput] = useState('')
 
   const handleSubmit = () => {
     if (name) {
-      localStorage.setItem('name', name)
-      socket.emit('login', {
-        id: socket.id,
-        name
-      })
       setClassInput('')
       navigate('/workspace')
     }
