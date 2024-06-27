@@ -1,28 +1,3 @@
-// import WebSocket from 'ws'
-
-// const wsServer = new WebSocket.Server({ port: 9000 })
-
-// wsServer.on('connection', (ws) => {
-//   ws.on('open', () => {
-
-//   })
-//   ws.on('error', (err) => {
-
-//   })
-//   ws.on('close', () => {
-
-//   })
-//   ws.on('message', (data) => {
-//     const message = JSON.parse(data.toString('utf-8'))
-//     if (message.type === '') {
-
-//     } else if (message.type === '') {
-
-//     }
-//   })
-// })
-
-
 import express from 'express'
 import socketIO, { Socket } from 'socket.io'
 
@@ -61,8 +36,9 @@ type Member = {
   selectedCard: number | null
 }
 type Room = {
-  id: string,
+  id: string
   name: string
+  cardsRevealed: boolean
   members: Record<string, Member>
 }
 const rooms: Record<string, Room> = {}
@@ -77,6 +53,7 @@ io.on('connection', (socket) => {
     rooms[id] = {
       id,
       name: roomName,
+      cardsRevealed: false,
       members: {
         [socket.id]: {
           socket,
@@ -103,13 +80,27 @@ io.on('connection', (socket) => {
       selectedCard: null
     }
     memberRooms[socket.id] = roomId
+    const roomData = {
+      name: room.name,
+      cardsRevealed: room.cardsRevealed,
+      members: Object.fromEntries(
+        Object.entries(room.members).map(([id, m]) => ([
+          id,
+          {
+            name: m.name,
+            selectedCard: room.cardsRevealed ? m.selectedCard : (m.selectedCard !== null)
+          }
+        ]))
+      )
+    }
+    socket.emit('joined', roomData)
   })
 
   socket.on('card choosen', (card) => {
     const roomId = memberRooms[socket.id]
     if (!roomId) return
     const room = rooms[roomId]
-    if (!room) return
+    if (!room || room.cardsRevealed) return
     for (const member of Object.values(room.members)) {
       if (member.socket.id !== socket.id) {
         member.socket.emit('card choosen', socket.id)
@@ -118,10 +109,40 @@ io.on('connection', (socket) => {
     room.members[socket.id].selectedCard = card
   })
 
-  
+  socket.on('reveal cards', () => {
+    const roomId = memberRooms[socket.id]
+    if (!roomId) return
+    const room = rooms[roomId]
+    if (!room) return
+    room.cardsRevealed = true
+    const choosenCards = Object.fromEntries(
+      Object.entries(room.members).map(([id, m]) => [id, m.selectedCard])
+    )
+    for (const member of Object.values(room.members)) {
+      member.socket.emit('reveal cards', choosenCards)
+    }
+  })
 
-  socket.on('message', (msg) => {
-    console.log(msg)
-    socket.broadcast.emit('message', msg)
+  socket.on('reset', () => {
+    const roomId = memberRooms[socket.id]
+    if (!roomId) return
+    const room = rooms[roomId]
+    if (!room) return
+    for (const member of Object.values(room.members)) {
+      member.selectedCard = null
+      member.socket.emit('reset')
+    }
+  })
+
+  socket.on('disconnect', () => {
+    const roomId = memberRooms[socket.id]
+    delete memberRooms[socket.id]
+    if (!roomId) return
+    const room = rooms[roomId]
+    if (!room) return
+    delete room.members[socket.id]
+    for (const member of Object.values(room.members)) {
+      member.socket.emit('member left', socket.id)
+    }
   })
 })

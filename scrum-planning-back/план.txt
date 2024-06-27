@@ -40,10 +40,10 @@ type Member {
 
 4. Открыть карты
 вход: {
-  type: 'revealCards'
+  type: 'reveal-cards'
 }
 выход всем участникам: {
-  type: 'revealCards',
+  type: 'reveal-cards',
   members: Record<id, number>
 }
 
