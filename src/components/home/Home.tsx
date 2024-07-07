@@ -1,15 +1,21 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useSocketContext } from "../../contexts/socketContext"
 
 const Home = () => {
+  const socket = useSocketContext();
   const navigate = useNavigate()
   const [name, setName] = useState('')
+  const [roomName, setRoomName] = useState('')
   const [classInput, setClassInput] = useState('')
 
   const handleSubmit = () => {
     if (name) {
-      setClassInput('')
-      navigate('/workspace')
+      localStorage.setItem('name', name)
+      socket.emit('create room', roomName, name)
+      socket.on('room created', id => {
+        navigate(`/room/${id}`)
+      })
     }
     setClassInput('input--empty')
   }
@@ -23,9 +29,16 @@ const Home = () => {
         <input 
           className={`input ${classInput}`}
           type="text" 
-          placeholder="game name" 
+          placeholder="имя игрока" 
           value={name} 
           onChange={(e) => setName(e.target.value)}
+        />
+        <input 
+          className={`input ${classInput}`}
+          type="text" 
+          placeholder="имя комнаты" 
+          value={roomName} 
+          onChange={(e) => setRoomName(e.target.value)}
         />
         <div 
           className="form__btn"
